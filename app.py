@@ -1,128 +1,96 @@
-        socketio.emit("presence", {"user": user, "online": False, "last_seen": seen},
-                      to=OTHER[user])
-        socketio.emit("typing", {"user": user, "typing": False}, to=OTHER[user])
+"""Arpita & Mayank Love ♡ — run:  pip install flask flask-socketio simple-websocket pillow  then  python app.py  (for phone notifications also: pip install pywebpush)"""
+import os
+import re
+import json
+import threading
+import base64
+import sqlite3
+import secrets
+import uuid
+import time
+from contextlib import closing
+from datetime import datetime, timezone
+from functools import wraps
+
+from flask import (Flask, g, request, session, jsonify, send_from_directory,
+                   redirect)
+from flask_socketio import SocketIO, emit, join_room
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
+from PIL import Image, ImageOps
+
+# ----------------------------------------------------------------- config
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.environ.get("DATA_DIR", os.path.join(BASE_DIR, "data"))
+UPLOAD_DIR = os.path.join(DATA_DIR, "uploads")
+DB_PATH = os.path.join(DATA_DIR, "love.db")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+USERS = ["Arpita", "Mayank"]
+DEFAULT_PASSWORD = "2011"
+OTHER = {"Arpita": "Mayank", "Mayank": "Arpita"}
+PRODUCTION = os.environ.get("PRODUCTION") == "1"
+ALLOWED_FORMATS = {"JPEG": "jpg", "PNG": "png", "WEBP": "webp", "GIF": "gif"}
+REACTIONS = ["❤️", "😂", "😮", "😢", "👍", "🙏", "🔥", "🥰"]
+IMG_MAX = 10 * 1024 * 1024
+AUDIO_MAX = 10 * 1024 * 1024
+VIDEO_MAX = 50 * 1024 * 1024
 
 
-@socketio.on("visible")
-def on_visible(data):
-    user = current_user()
-    if not user:
-        return
-    if (data or {}).get("visible"):
-        viewing[user].add(request.sid)
-    else:
-        viewing[user].discard(request.sid)
-
-
-@socketio.on("send_message")
-def on_send(data):
-    user = current_user()
-    if not user:
-        return {"ok": False, "error": "Not logged in"}
-    body = (data or {}).get("body")
-    if not isinstance(body, str) or not body.strip():
-        return {"ok": False, "error": "Empty message"}
-    body = body.strip()
-    if len(body) > 2000:
-        return {"ok": False, "error": "Message is too long"}
-    create_message(user, body, None)
-    return {"ok": True}
-
-
-@socketio.on("edit_message")
-def on_edit(data):
-    user = current_user()
-    if not user:
-        return {"ok": False, "error": "Not logged in"}
+def load_secret_key():
+    key = os.environ.get("SECRET_KEY")
+    if key:
+        return key
+    path = os.path.join(DATA_DIR, "secret_key")
+    if os.path.exists(path):
+        with open(path) as f:
+            return f.read().strip()
+    key = secrets.token_hex(32)
+    with open(path, "w") as f:
+        f.write(key)
     try:
-        mid = int((data or {}).get("id"))
-    except (TypeError, ValueError):
-        return {"ok": False, "error": "Invalid message"}
-    body = (data or {}).get("body")
-    row = query("SELECT sender FROM messages WHERE id=?", (mid,), one=True)
-    if not row or row["sender"] != user:
-        return {"ok": False, "error": "Sirf apna message edit kar sakte ho."}
-    if not isinstance(body, str) or not body.strip() or len(body.strip()) > 2000:
-        return {"ok": False, "error": "Message khali ya bahut lamba hai."}
-    at = now_iso()
-    execute("UPDATE messages SET body=?, edited_at=? WHERE id=?", (body.strip(), at, mid))
-    payload = {"id": mid, "body": body.strip(), "edited_at": at}
-    for u in USERS:
-        socketio.emit("message_edited", payload, to=u)
-    return {"ok": True}
+        os.chmod(path, 0o600)
+    except OSError:
+        pass
+    return key
 
 
-@socketio.on("react")
-def on_react(data):
-    user = current_user()
-    if not user:
-        return
-    try:
-        mid = int((data or {}).get("id"))
-    except (TypeError, ValueError):
-        return
-    emoji = (data or {}).get("emoji")
-    if not query("SELECT 1 FROM messages WHERE id=?", (mid,), one=True):
-        return
-    cur = query("SELECT emoji FROM reactions WHERE message_id=? AND user=?", (mid, user), one=True)
-    if emoji is None or (cur and cur["emoji"] == emoji):
-        execute("DELETE FROM reactions WHERE message_id=? AND user=?", (mid, user))
-    elif emoji in REACTIONS:
-        execute("INSERT INTO reactions(message_id, user, emoji) VALUES(?,?,?) "
-                "ON CONFLICT(message_id, user) DO UPDATE SET emoji=excluded.emoji", (mid, user, emoji))
-    else:
-        return
-    payload = {"id": mid, "reactions": get_reactions(mid)}
-    for u in USERS:
-        socketio.emit("reactions", payload, to=u)
+app = Flask(__name__)
+app.config.update(
+    SECRET_KEY=load_secret_key(),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=PRODUCTION,
+    PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 30,
+    MAX_CONTENT_LENGTH=64 * 1024 * 1024,
+)
+if PRODUCTION:  # running behind a hosting proxy that terminates HTTPS
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+origins = os.environ.get("ALLOWED_ORIGINS")
+socketio = SocketIO(
+    app,
+    async_mode="threading",
+    cors_allowed_origins=[o.strip() for o in origins.split(",")] if origins else None,
+)
+
+online = {u: set() for u in USERS}   # username -> socket ids (connected)
+viewing = {u: set() for u in USERS}  # username -> socket ids whose page is visible right now
+
+# ---- push notifications (Android Chrome etc.) ----
+try:
+    from pywebpush import webpush, WebPushException
+    from py_vapid import Vapid
+    from cryptography.hazmat.primitives import serialization
+    PUSH_OK = True
+except Exception:
+    PUSH_OK = False
+VAPID_SUB = os.environ.get("VAPID_EMAIL", "mailto:admin@example.com")
+NOTIFY_USERS = {"Mayank"}  # only these people get phone notifications
+SHOW_PREVIEW = False  # True = lock screen shows the message text; False = only "new message"
 
 
-@socketio.on("typing")
-def on_typing(data):
-    user = current_user()
-    if user:
-        socketio.emit("typing", {"user": user, "typing": bool((data or {}).get("typing"))},
-                      to=OTHER[user])
-
-
-@socketio.on("mark_read")
-def on_read():
-    user = current_user()
-    if not user:
-        return
-    ids = [r["id"] for r in query(
-        "SELECT id FROM messages WHERE recipient=? AND read_at IS NULL", (user,))]
-    if ids:
-        at = now_iso()
-        execute("UPDATE messages SET read_at=?, delivered_at=COALESCE(delivered_at, ?) "
-                "WHERE recipient=? AND read_at IS NULL", (at, at, user))
-        socketio.emit("read", {"ids": ids, "at": at}, to=OTHER[user])
-
-
-def setup_passwords(force=False):
-    import getpass
-    for name in USERS:
-        exists = query("SELECT 1 FROM users WHERE name=?", (name,), one=True)
-        if exists and not force:
-            continue
-        while True:
-            pw = getpass.getpass(f"Choose a password for {name} (min 8 chars): ")
-            if len(pw) < 8:
-                print("  Too short, try again.")
-            elif pw != getpass.getpass("  Confirm: "):
-                print("  Did not match, try again.")
-            else:
-                set_password(name, pw)
-                print(f"  {name} saved.")
-                break
-
-
-if __name__ == "__main__":
-    import sys
-    # first run: asks for the two passwords; "python app.py setpw" resets them
-    if len(sys.argv) > 1 and sys.argv[1] == "setpw":
-        setup_passwords(force=True)
-    else:
-        # ready-made password for both accounts: 2011  (change it before going online!)
-        for _name in USERS:
-            if not query("SELECT 1 FROM users WHERE name=?", (_name,), one=True):
+def load_vapid():
+    env = os.environ.get("VAPID_PRIVATE_KEY")
+    if env:

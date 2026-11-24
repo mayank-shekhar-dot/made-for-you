@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arpita, a rose and a promise | Mayank</title>
+<meta name="description" content="A 3D rose, an apology and a proposal from Mayank to Arpita.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#12020a;--rose:#ff4d6d;--red:#c1121f;--gold:#f4c27a;--blush:#ffd6de}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--blush);font:400 1.25rem/1.75 'Cormorant Garamond',serif;overflow-x:hidden}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 35%,#080005dd 100%)}
+main{position:relative;z-index:2}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+h1,h2{font-family:'Great Vibes',cursive;font-weight:400;color:#fff;line-height:1.05;text-shadow:0 0 40px rgba(255,77,109,.5)}
+h1{font-size:clamp(4rem,15vw,11rem)}h2{font-size:clamp(2.8rem,8vw,6rem)}
+section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:12vh 6vw;text-align:center}
+.card{max-width:640px;padding:clamp(24px,5vw,50px);border-radius:28px;border:1px solid rgba(255,214,222,.18);background:rgba(18,2,10,.55);backdrop-filter:blur(10px)}
+.card p{margin-top:16px}
+.small{font:500 .72rem 'Montserrat';letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+#hero{align-items:flex-start;padding-top:14vh}
+.cue{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:5;font:300 .65rem Montserrat;letter-spacing:.4em;text-transform:uppercase;color:var(--blush);opacity:.7;animation:b 2s infinite}
+@keyframes b{50%{transform:translate(-50%,8px)}}
+.l{list-style:none;margin-top:18px;display:grid;gap:10px}.l li{font-style:italic}.l li::before{content:"❀ ";color:var(--rose)}
+.ph{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.ph figure{width:150px;padding:8px 8px 22px;background:#fff0f3;color:#3a0a16;border-radius:4px;transform:rotate(-4deg);font:.85rem/1.3 'Cormorant Garamond';box-shadow:0 14px 40px #0008}
+.ph figure:nth-child(2){transform:rotate(3deg) translateY(10px)}.ph figure:nth-child(3){transform:rotate(-2deg)}
+.ph img{display:block;width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:6px;background:#e7aab6}
+.btns{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.btn{padding:16px 40px;border-radius:99px;border:1px solid var(--rose);background:transparent;color:#fff;font:500 .8rem Montserrat;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:.3s}
+.btn.y{background:linear-gradient(100deg,var(--red),var(--rose));border:0;box-shadow:0 0 40px -6px var(--rose);font-size:1rem;padding:20px 54px}
+.btn:hover{transform:scale(1.07)}
+#no{transition:left .35s,top .35s}
+#fin{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:rgba(10,0,6,.88);backdrop-filter:blur(8px);text-align:center;padding:24px}
+#fin.on{display:grid}#fin .card{background:rgba(40,4,18,.7)}
+#hc{position:fixed;inset:0;z-index:110;pointer-events:none}
+#ctl{position:fixed;z-index:60;top:16px;right:16px;display:flex;gap:8px;align-items:center}
+#ctl button,#ctl label{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,214,222,.3);background:rgba(18,2,10,.7);backdrop-filter:blur(8px);color:#fff;font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
+#ctl input{display:none}
+#gate{position:fixed;inset:0;z-index:300;background:radial-gradient(circle at 50% 40%,#3a0614,var(--bg) 70%);display:grid;place-items:center;text-align:center;padding:24px;transition:opacity 1.2s}
+#gate h1{font-size:clamp(3.2rem,12vw,8rem)}#gate p{margin:10px 0 28px}
+
+.card{animation:gl 5s ease-in-out infinite}@keyframes gl{50%{box-shadow:0 0 60px -10px rgba(255,77,109,.45)}}
+.wide{max-width:780px}.card .rev{margin-top:18px;text-align:left}
+.qa{max-width:780px;display:grid;gap:28px}
+.bub{padding:26px 32px;border-radius:28px;font-size:1.3rem}
+.bub.q{justify-self:end;background:linear-gradient(100deg,var(--red),var(--rose));color:#fff;border-bottom-right-radius:6px;font-style:italic}
+.bub.a{justify-self:start;text-align:left;background:rgba(18,2,10,.62);border:1px solid rgba(255,214,222,.2);backdrop-filter:blur(10px);border-bottom-left-radius:6px}
+.bub small{display:block;font:500 .65rem Montserrat;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.spk{position:fixed;z-index:90;pointer-events:none;color:var(--rose);animation:spk 1.2s forwards}@keyframes spk{to{transform:translateY(-44px) scale(.3);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.ch{display:inline-block}
+</style>
+</head>
+<body>
+<audio id="bgm" loop preload="auto"></audio>
+<canvas id="gl" aria-hidden="true"></canvas><div class="vig"></div><canvas id="hc" aria-hidden="true"></canvas>
+
+<div id="gate"><div>
+  <p class="small">A little something for you</p>
+  <h1 id="gn">Arpita</h1>
+  <p>Tap to open, and keep your sound on.</p>
+  <button class="btn y" id="open">Open ♥</button>
+</div></div>
+
+<div id="ctl"><button id="mus" aria-label="Play or pause music" title="Music">♪</button><label title="Choose your song" aria-label="Choose your song file">⬆<input type="file" id="pick" accept="audio/*"></label></div>
+<div class="cue" aria-hidden="true">Scroll</div>
+
+<main>
+<section id="hero"><div><p class="small">A rose, a sorry, and a question</p><h1 id="ht">For Arpita</h1></div></section>
+
+<section id="sorry"><div class="card"><p class="small">First, I owe you this</p><h2>I'm sorry</h2><p id="sm"></p></div></section>
+
+<section id="why"><div class="card"><p class="small">Why this rose</p><h2>Because of you</h2><ul class="l" id="rs"></ul></div></section>
+
+<section id="qa"><div class="qa"><div class="bub q" id="qq"></div><div class="bub a"><small>Mayank's answer</small><p class="rev" id="aa"></p></div></div></section>
+
+<section id="mem"><div class="card"><p class="small">Our moments</p><h2>Us</h2><div class="ph" id="ph"></div><p style="font-size:.95rem;opacity:.7">Placeholder photos – add your own image links in the script.</p></div></section>
+
+<section id="ask"><div class="card"><p class="small">Now, the question</p><h2 id="aq"></h2><p id="am"></p>
+  <div class="btns"><button class="btn y" id="yes">Yes ♥</button><button class="btn" id="no">Let me think…</button></div></div></section>
+</main>
+
+<div id="fin" role="dialog" aria-modal="true" aria-label="She said yes"><div class="card"><p class="small">She said yes</p><h2 id="ft"></h2><p id="fm"></p></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ========== EDIT YOUR WORDS, PHOTOS AND MUSIC HERE ========== */
+const CFG={
+ her:"Arpita", him:"Mayank",
+ music:"music.mp3", // put your song file next to this html and keep this name, or use the upload button (top right)
+ sorry:"I'm sorry for the times I hurt you, for the words I said without thinking and the ones I should have said and didn't. You deserve patience, honesty and a heart that listens. I'm learning every day, and I'm sorry it took me this long to say it properly.",
+ reasons:["Your smile makes my hardest days lighter.","You make me want to be better, every single day.","With you, even silence feels like home."],
+ qaQ:"Tum mujhse badi ho, puchti ho na??",
+ qaA:"Honestly, mujhe nahi pata tum khud ko kis nazar se dekhti ho, but meri nazron mein tum bahut hi behtareen ho. Tumhari personality, tumhari soch, tumhara nature aur tumhara baat karne ka tareeka, har cheez mein ek alag hi khoobsurati hai. Kabhi-kabhi lagta hai ki tumhare jaisa banna bhi apne aap mein ek achievement hogi. Main khud ko tumse compare nahi karna chahta, kyunki tumhari apni ek alag jagah hai aur meri nazron mein tum mujhse kahin zyada achhi ho. Tum sirf tareef ke laayak nahi, usse bhi achhi ho, aur hum kitna hi describe kar sakte hain, sorry.",
+ photos:[{src:"",cap:"Add a photo"},{src:"",cap:"Our favourite day"},{src:"",cap:"Us"}],
+ ask:"Arpita, will you be mine forever?",
+ askNote:"One rose, one heart, and a lifetime of trying to deserve you.",
+ dodge:["Let me think…","Are you sure?","Really?","Think again 🥺","Pretty please?","Okay, YES!"],
+ finalTitle:"Thank you, Arpita",
+ finalMsg:"You just made me the happiest person alive. I promise to love you, respect you and choose you every day. Forever starts now. — Mayank"
+};
+/* ============================================================ */
+const $=s=>document.querySelector(s),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+$('#gn').textContent=CFG.her;
+const ttl='For '+CFG.her;$('#ht').setAttribute('aria-label',ttl);$('#ht').innerHTML=[...ttl].map(c=>`<span class="ch" aria-hidden="true">${c===' '?'&nbsp;':c}</span>`).join('');
+const wd=(el,t)=>{el.innerHTML=t.split(' ').map(w=>`<span>${w}</span>`).join(' ')};
+$('#sm').textContent=CFG.sorry;wd($('#aa'),CFG.qaA);$('#qq').textContent=CFG.qaQ;
+$('#rs').innerHTML=CFG.reasons.map(r=>`<li>${r}</li>`).join('');
+const ph=(c,i)=>{const s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="hsl(${345+i*8},60%,78%)"/><path d="M100 150C40 105 55 55 100 80c45-25 60 25 0 70z" fill="#c1121f" opacity=".8"/></svg>`;return'data:image/svg+xml,'+encodeURIComponent(s)};
+$('#ph').innerHTML=CFG.photos.map((p,i)=>`<figure><img loading="lazy" alt="${p.cap}" src="${p.src||ph(p.cap,i)}">${p.cap}</figure>`).join('');
+$('#aq').textContent=CFG.ask;$('#am').textContent=CFG.askNote;$('#ft').textContent=CFG.finalTitle;$('#fm').textContent=CFG.finalMsg;
+
+/* ----- music ----- */
+const au=$('#bgm'),mus=$('#mus');au.src=CFG.music;au.volume=.7;
+const playing=()=>!au.paused;
+mus.onclick=()=>{playing()?au.pause():au.play().catch(()=>{})};
+$('#pick').onchange=e=>{const f=e.target.files[0];if(!f)return;au.src=URL.createObjectURL(f);au.play().catch(()=>{})};
+$('#open').onclick=()=>{au.play().catch(()=>{});const g=$('#gate');g.style.opacity=0;setTimeout(()=>g.remove(),1200);if(window.gsap&&!RM)gsap.from('#ht .ch',{yPercent:130,rotateX:-90,opacity:0,stagger:.08,duration:1.5,delay:.5,ease:'power4.out'})};
+
+/* ----- 3D rose ----- */
+var st2={p:0,sp:0},bloom={v:0},burst=0;
+try{
+if(!window.THREE)throw new Error('Three.js did not load (check internet / CDN access)');
+const R=new THREE.WebGLRenderer({canvas:$('#gl'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,1.75));
+const S=new THREE.Scene();S.background=new THREE.Color(0x12020a);S.fog=new THREE.FogExp2(0x12020a,.05);
+const C=new THREE.PerspectiveCamera(50,1,.1,100);
+S.add(new THREE.HemisphereLight(0xffd6de,0x200008,.8));
+const kl=new THREE.DirectionalLight(0xfff0e0,1.6);kl.position.set(3,5,4);S.add(kl);
+const rl=new THREE.PointLight(0xffd6e4,3,12);rl.position.set(0,1,-3);S.add(rl);
+const fl=new THREE.PointLight(0xf4c27a,1.4,12);fl.position.set(-3,1,3);S.add(fl);
+const tex=(draw,w=64,h=64)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);return new THREE.CanvasTexture(c)};
+const glow=tex((x,w,h)=>{const g=x.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const heartT=tex((x,w,h)=>{x.fillStyle='#fff';x.beginPath();x.moveTo(32,56);x.bezierCurveTo(-8,28,10,2,32,18);x.bezierCurveTo(54,2,72,28,32,56);x.fill()});
+const petalT=tex((x,w,h)=>{x.fillStyle='#fff';x.beginPath();x.moveTo(32,60);x.bezierCurveTo(0,40,6,6,32,4);x.bezierCurveTo(58,6,64,40,32,60);x.fill()});
+/* rose built from spiral petals */
+const rose=new THREE.Group(),pets=[],N=36;
+for(let i=0;i<N;i++){const t=i/N,w=.4+t*1.0,h=.5+t*1.0,g=new THREE.PlaneGeometry(w,h,10,10),pos=g.attributes.position,col=[],base=new THREE.Color().setHSL(.96,.1,.9-t*.05);
+ for(let k=0;k<pos.count;k++){const x=pos.getX(k),y=pos.getY(k)+h/2,u=y/h;pos.setZ(k,-(x*x)*(2.2-t)+u*u*(.15+t*.85)+Math.sin(u*7+x*5)*.02*t);pos.setY(k,y);const c=base.clone().multiplyScalar(.66+.36*u);col.push(c.r,c.g,c.b)}
+ g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+ const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,side:2,roughness:.45,metalness:.05,emissive:0x222222,emissiveIntensity:.45}));
+ const grp=new THREE.Group();grp.rotation.y=i*2.39996;m.position.z=.04+t*.5;m.rotation.x=.08+t*.95;m.userData.b=m.rotation.x;m.userData.t=t;grp.add(m);rose.add(grp);pets.push(m)}
+const stem=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,3.2,12),new THREE.MeshStandardMaterial({color:0x1d5a2c,roughness:.6}));stem.position.y=-1.6;rose.add(stem);
+[[-1,-1.4],[1,-2.1]].forEach(a=>{const l=new THREE.Mesh(new THREE.SphereGeometry(.5,16,12),new THREE.MeshStandardMaterial({color:0x226b34,roughness:.5}));l.scale.set(1,.06,.45);l.position.set(a[0]*.5,a[1],0);l.rotation.z=a[0]*.6;rose.add(l)});
+const sep=new THREE.Mesh(new THREE.ConeGeometry(.55,.5,14,1,true),new THREE.MeshStandardMaterial({color:0x226b34,side:2}));sep.position.y=-.2;sep.rotation.x=Math.PI;rose.add(sep);
+rose.scale.setScalar(1.5);rose.position.y=.2;S.add(rose);
+const hg=new THREE.Sprite(new THREE.SpriteMaterial({map:glow,color:0xffc4d4,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.55}));hg.scale.set(9,9,1);hg.position.set(0,.5,-1.5);S.add(hg);
+const fl2=new THREE.Mesh(new THREE.CircleGeometry(7,48),new THREE.MeshStandardMaterial({color:0x1a0510,metalness:.8,roughness:.3}));fl2.rotation.x=-Math.PI/2;fl2.position.y=-3.2;S.add(fl2);
+/* falling petals + rising hearts */
+const mkP=(n,map,col,size,top)=>{const a=new Float32Array(n*3),sp=[];for(let i=0;i<n;i++){a[i*3]=(Math.random()-.5)*16;a[i*3+1]=Math.random()*top-3;a[i*3+2]=(Math.random()-.5)*14-2;sp.push(.2+Math.random()*.5)}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(a,3));const p=new THREE.Points(g,new THREE.PointsMaterial({size,map,color:col,transparent:true,opacity:.85,depthWrite:false,blending:THREE.AdditiveBlending}));p.userData={a,sp,top};S.add(p);return p};
+const fall=mkP(110,petalT,0xff3b5c,.38,11),hearts=mkP(60,heartT,0xff8fa3,.3,11);
+/* heart, engagement ring, halos, bokeh */
+const hp=[];for(let i=0;i<=64;i++){const a=i/64*6.2832;hp.push(new THREE.Vector2(16*Math.pow(Math.sin(a),3)/16,(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a))/16))}
+const hg3=new THREE.ExtrudeGeometry(new THREE.Shape(hp),{depth:.35,bevelEnabled:true,bevelSize:.08,bevelThickness:.1,bevelSegments:5,curveSegments:32});hg3.center();
+const heart3=new THREE.Mesh(hg3,new THREE.MeshStandardMaterial({color:0xe01a3c,roughness:.25,metalness:.2,emissive:0x5a0012,emissiveIntensity:.7}));heart3.scale.setScalar(.75);S.add(heart3);
+const ring=new THREE.Group(),gold=new THREE.MeshStandardMaterial({color:0xf4c27a,metalness:1,roughness:.2,emissive:0x4a2a00,emissiveIntensity:.3});
+ring.add(new THREE.Mesh(new THREE.TorusGeometry(.5,.07,16,48),gold));
+const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.19),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0,metalness:.3,emissive:0xaad8ff,emissiveIntensity:.8}));gem.position.y=.62;gem.scale.y=1.3;ring.add(gem);
+const gs=new THREE.Sprite(new THREE.SpriteMaterial({map:glow,color:0xcfeaff,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.9}));gs.scale.set(1.4,1.4,1);gs.position.y=.62;ring.add(gs);S.add(ring);
+const halos=[[2.4,0xf4c27a,.5],[2.9,0xff8fa3,.35]].map(a=>{const h=new THREE.Mesh(new THREE.TorusGeometry(a[0],.012,6,140),new THREE.MeshBasicMaterial({color:a[1],transparent:true,opacity:a[2]}));h.position.y=.5;S.add(h);return h});
+const bk=[];for(let i=0;i<30;i++){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:glow,color:i%2?0xff6b8a:0xf4c27a,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.25+Math.random()*.3}));const sc=.6+Math.random()*1.6;sp.scale.set(sc,sc,1);sp.position.set((Math.random()-.5)*14,Math.random()*7-2,-1-Math.random()*8);sp.userData={y:sp.position.y,o:Math.random()*6};S.add(sp);bk.push(sp)}
+const V=a=>a.map(x=>new THREE.Vector3(...x));
+const cp=new THREE.CatmullRomCurve3(V([[0,.9,9],[4.5,-.4,5.2],[1,3.4,6.2],[-4.6,1,5.2],[0,.5,3.9],[0,.7,6.8]]));
+const cl=new THREE.CatmullRomCurve3(V([[0,.4,0],[-1.2,.9,-.5],[0,.3,0],[1.3,1,-.5],[0,.4,0],[0,.9,0]]));
+const m={x:0,y:0,tx:0,ty:0},look=new THREE.Vector3();
+addEventListener('pointermove',e=>{m.tx=e.clientX/innerWidth*2-1;m.ty=e.clientY/innerHeight*2-1});
+function size(){R.setSize(innerWidth,innerHeight,false);C.aspect=innerWidth/innerHeight;C.fov=innerWidth<700?62:50;C.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+const clk=new THREE.Clock();
+window.tick=function(){const t=clk.getElapsedTime();
+ st2.sp+=(st2.p-st2.sp)*.06;m.x+=(m.tx-m.x)*.05;m.y+=(m.ty-m.y)*.05;
+ const p=Math.min(Math.max(st2.sp,0),.999);
+ cp.getPoint(p,C.position);C.position.x+=m.x*.8;C.position.y+=-m.y*.5;cl.getPoint(p,look);C.lookAt(look);
+ const vel=st2.p-st2.sp;C.rotateZ(Math.max(-.14,Math.min(.14,vel*9)));const fb=innerWidth<700?62:50,ff=fb+Math.min(16,Math.abs(vel)*600);if(Math.abs(C.fov-ff)>.05){C.fov+=(ff-C.fov)*.1;C.updateProjectionMatrix()}
+ heart3.position.set(Math.cos(t*.45)*2.9,1.3+Math.sin(t*1.1)*.3,Math.sin(t*.45)*2.9-.5);heart3.rotation.y=t*.9;heart3.rotation.z=Math.sin(t*.8)*.2;heart3.scale.setScalar(.75*(1+Math.max(0,Math.sin(t*3))*.06)+burst*.3);
+ ring.position.set(Math.cos(t*.45+3.14)*2.9,.9+Math.sin(t*.9)*.3,Math.sin(t*.45+3.14)*2.9-.5);ring.rotation.y=t*1.2;ring.rotation.x=.4;ring.scale.setScalar(.8+Math.min(1,p*1.2)*.7+burst*.6);gem.rotation.y=t*2;
+ halos[0].rotation.set(1.3+Math.sin(t*.3)*.2,t*.25,0);halos[1].rotation.set(1.1,-t*.2,.5+Math.sin(t*.4)*.2);
+ bk.forEach(b=>{b.position.y=b.userData.y+Math.sin(t*.5+b.userData.o)*.5});
+ const b=Math.min(1,bloom.v+p*.25);
+ pets.forEach(q=>{q.rotation.x=q.userData.b+b*.4*q.userData.t});
+ rose.rotation.y=t*.18+st2.sp*5;rose.scale.setScalar(1.5+Math.sin(t*1.6)*.015+burst*.2);
+ rl.intensity=3+Math.sin(t*2)*.5+burst*3;hg.material.opacity=.5+Math.sin(t*1.6)*.08+burst*.3;
+ [fall,hearts].forEach((o,k)=>{const a=o.userData.a,sp=o.userData.sp;for(let i=0;i<sp.length;i++){a[i*3+1]+=(k?1:-1)*sp[i]*.016*(1+burst*3);a[i*3]+=Math.sin(t+i)*.004;if(a[i*3+1]<-3)a[i*3+1]=o.userData.top-3;if(a[i*3+1]>o.userData.top-3)a[i*3+1]=-3}o.geometry.attributes.position.needsUpdate=true});
+ burst*=.985;
+ R.render(S,C);if(!RM)requestAnimationFrame(window.tick)};
+window.celebrate=()=>{burst=1;window.gsap&&gsap.to(bloom,{v:1,duration:2.5,ease:'power2.out'})};
+tick();
+if(RM)addEventListener('scroll',()=>{st2.sp=st2.p=scrollY/Math.max(1,document.body.scrollHeight-innerHeight);window.tick()},{passive:true});
+}catch(e){console.error('3D scene disabled:',e)}
+
+/* ----- scroll ----- */
+const G=window.gsap&&window.ScrollTrigger;
+if(G){gsap.registerPlugin(ScrollTrigger);
+ ScrollTrigger.create({start:0,end:'max',onUpdate:s=>st2.p=s.progress});
+ if(!RM)document.querySelectorAll('.card,.bub').forEach(c=>gsap.from(c,{y:90,opacity:0,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 85%'}}));
+ if(!RM)gsap.to('#hero>div',{opacity:0,y:-60,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 30%',scrub:true}});
+ if(!RM)document.querySelectorAll('.rev').forEach(el=>gsap.fromTo(el.querySelectorAll('span'),{opacity:.12},{opacity:1,stagger:.06,ease:'none',scrollTrigger:{trigger:el,start:'top 82%',end:'bottom 50%',scrub:true}}));
+ if(!RM)gsap.utils.toArray('#rs li').forEach((li,i)=>gsap.from(li,{x:i%2?80:-80,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:li,start:'top 90%'}}));
+ if(!RM)gsap.utils.toArray('.ph figure').forEach((f,i)=>gsap.from(f,{y:120,rotate:i*14-14,opacity:0,duration:1.2,delay:i*.15,ease:'back.out(1.6)',scrollTrigger:{trigger:'#ph',start:'top 85%'}}));
+ addEventListener('scroll',()=>{$('.cue').style.opacity=scrollY>80?0:.7},{passive:true})}
+
+/* heart trail */
+if(!RM&&matchMedia('(pointer:fine)').matches){let last=0;addEventListener('pointermove',e=>{const n=performance.now();if(n-last<60)return;last=n;const h=document.createElement('span');h.textContent='♥';h.className='spk';h.style.cssText='left:'+e.clientX+'px;top:'+e.clientY+'px;font-size:'+(8+Math.random()*12)+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),1200)})}
+/* ----- the question ----- */
+const no=$('#no');let tries=0;
+function dodge(e){if(e&&e.preventDefault)e.preventDefault();tries++;if(tries>=CFG.dodge.length-1){no.textContent=CFG.dodge[CFG.dodge.length-1];no.onclick=say;return}
+ no.textContent=CFG.dodge[tries];no.style.position='fixed';const x=Math.random()*(innerWidth-180)+10,y=Math.random()*(innerHeight-70)+10;no.style.left=x+'px';no.style.top=y+'px';no.style.zIndex=5}
+no.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'&&tries<CFG.dodge.length-1)dodge()});
+no.addEventListener('click',dodge);no.addEventListener('focus',()=>{if(tries<CFG.dodge.length-1)dodge()});
+function say(){$('#fin').classList.add('on');if(window.celebrate)celebrate();hearts_()}
+$('#yes').onclick=say;
+function hearts_(){const c=$('#hc'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const P=[];for(let i=0;i<140;i++)P.push({x:innerWidth/2,y:innerHeight/2,vx:(Math.random()-.5)*16,vy:-Math.random()*16-4,s:10+Math.random()*22,r:Math.random()*6,c:['#ff4d6d','#ff8fa3','#f4c27a','#fff0f3','#c1121f'][i%5]});
+ let f=0;(function d(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.28;p.vx*=.99;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.font=p.s+'px serif';x.fillText('♥',0,0);x.restore()});if(++f<260)requestAnimationFrame(d);else x.clearRect(0,0,c.width,c.height)})()}
+</script>
+</body>
+</html>
